@@ -1,5 +1,6 @@
 package com.github.sewerina.reek;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -64,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
                         });
         jsonArrayRequest.setTag("jsonArrayRequest");
         mRequestQueue.add(jsonArrayRequest);
+
+        startActivity(new Intent(this, MapsActivity.class));
 
     }
 
