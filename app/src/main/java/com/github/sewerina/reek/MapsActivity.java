@@ -1,8 +1,17 @@
 package com.github.sewerina.reek;
 
-import androidx.fragment.app.FragmentActivity;
-
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -13,16 +22,22 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private static final String[] LOCATION_PERMISSIONS = new String[]
+            {Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION};
+    private static final int REQUEST_LOCATION_PERMISSIONS = 0;
     private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
     }
 
 
@@ -38,10 +53,51 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+//        setMoscowLocation();
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        if (hasLocationPermission()) {
+            setCurrentLocation();
+        } else {
+            setMoscowLocation();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(LOCATION_PERMISSIONS, REQUEST_LOCATION_PERMISSIONS);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_LOCATION_PERMISSIONS:
+                if (hasLocationPermission()) {
+                    setCurrentLocation();
+                }
+
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+    }
+
+    private void setCurrentLocation() {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        @SuppressLint("MissingPermission") Location lastKnownLocation
+                = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        LatLng last = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+        mMap.addMarker(new MarkerOptions().position(last).title("Marker"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(last));
+    }
+
+    private void setMoscowLocation() {
+        LatLng last = new LatLng(55.742793, 37.615401);
+        mMap.addMarker(new MarkerOptions().position(last).title("Marker"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(last));
+    }
+
+    private boolean hasLocationPermission() {
+        int result = ContextCompat
+                .checkSelfPermission(this, LOCATION_PERMISSIONS[0]);
+        return result == PackageManager.PERMISSION_GRANTED;
     }
 }
