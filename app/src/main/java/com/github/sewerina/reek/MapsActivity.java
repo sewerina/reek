@@ -8,10 +8,13 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,6 +23,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.List;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private static final String[] LOCATION_PERMISSIONS = new String[]
@@ -27,6 +32,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Manifest.permission.ACCESS_COARSE_LOCATION};
     private static final int REQUEST_LOCATION_PERMISSIONS = 0;
     private GoogleMap mMap;
+    private MainViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +44,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        mViewModel = ViewModelProviders.of(this, ReekApp.getViewModelFactory()).get(MainViewModel.class);
+
+        mViewModel.getReekObjects().observe(this, new Observer<List<ReekObject>>() {
+            @Override
+            public void onChanged(List<ReekObject> reekObjects) {
+//                StringBuilder builder = new StringBuilder();
+//
+//                for (ReekObject reek : reekObjects) {
+//                    builder.append(reek.mName).append("\n");
+//                }
+//                mTextView.setText(builder);
+
+                showReeks(reekObjects);
+            }
+        });
+    }
+
+    private void showReeks(List<ReekObject> reekObjects) {
+        if (mMap == null) {
+            return;
+        }
+
+        for (ReekObject reek: reekObjects) {
+            LatLng point = new LatLng(reek.mLatitude, reek.mLongitude);
+            mMap.addMarker(new MarkerOptions().position(point).title(reek.mName));
+//            mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
+            Log.d("MapsActivity", "showReeks: " + reek.mName);
+        }
     }
 
 
@@ -63,6 +97,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 requestPermissions(LOCATION_PERMISSIONS, REQUEST_LOCATION_PERMISSIONS);
             }
         }
+        mViewModel.load();
     }
 
     @Override
@@ -82,11 +117,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void setCurrentLocation() {
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        @SuppressLint("MissingPermission") Location lastKnownLocation
-                = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        LatLng last = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-        mMap.addMarker(new MarkerOptions().position(last).title("Marker"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(last));
+
+        if (locationManager != null) {
+            @SuppressLint("MissingPermission") Location lastKnownLocation
+                    = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            LatLng last = null;
+
+            if (lastKnownLocation != null) {
+                last = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+            } else {
+                last = new LatLng(55.742793, 37.615401);
+            }
+
+            mMap.addMarker(new MarkerOptions().position(last).title("Marker"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(last));
+        }
     }
 
     private void setMoscowLocation() {

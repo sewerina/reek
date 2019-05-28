@@ -9,7 +9,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,17 +18,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainViewModel extends ViewModel {
-    private final RequestQueue mRequestQueue;
     private static final String ARRAY_REQUEST_TAG = "jsonArrayRequest";
-
-    private final MutableLiveData<List<String>> mNames = new MutableLiveData<>();
-
-    public LiveData<List<String>> getNames() {
-        return mNames;
-    }
+    private final RequestQueue mRequestQueue;
+    private final MutableLiveData<List<ReekObject>> mReekObjects = new MutableLiveData<>();
 
     public MainViewModel(RequestQueue requestQueue) {
         mRequestQueue = requestQueue;
+    }
+
+    public LiveData<List<ReekObject>> getReekObjects() {
+        return mReekObjects;
     }
 
     public void load() {
@@ -43,16 +41,18 @@ public class MainViewModel extends ViewModel {
                             @Override
                             public void onResponse(JSONArray response) {
                                 try {
-                                    List<String> names = new ArrayList<>();
+                                    List<ReekObject> reekObjects = new ArrayList<>();
                                     for (int i = 0; i < response.length(); i++) {
                                         JSONObject obj = (JSONObject) response.get(i);
                                         JSONObject cells = (JSONObject) obj.get("Cells");
-                                        String shortName = cells.get("ShortName").toString();
-                                        names.add(shortName);
+                                        String fullName = cells.get("FullName").toString();
+                                        JSONObject geoData = (JSONObject) cells.get("geoData");
+                                        JSONArray coordinates = (JSONArray) geoData.get("coordinates");
+                                        double latitude = coordinates.getDouble(1);
+                                        double longitude = coordinates.getDouble(0);
+                                        reekObjects.add(new ReekObject(fullName, latitude, longitude));
                                     }
-                                    mNames.postValue(names);
-
-//                                    mTextView.setText(builder.toString());
+                                    mReekObjects.postValue(reekObjects);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
