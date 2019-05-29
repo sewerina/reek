@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView mMapScreenIv;
     private Button mSendComplaintBtn;
     private ReekSpinnerAdapter mSpinnerAdapter;
+    private String mScreenPath;
     private MainViewModel mViewModel;
 
     @Override
@@ -52,13 +53,20 @@ public class MainActivity extends AppCompatActivity {
         mSendComplaintBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = "";
+                String email = "sewerina.ea@yandex.ru";
                 String subject = "Жалоба на неприятный запах";
                 String body = "";
                 String chooserTitle = "Выберите почтовый клиент";
+
                 Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + email));
                 intent.putExtra(Intent.EXTRA_SUBJECT, subject);
                 intent.putExtra(Intent.EXTRA_TEXT, body);
+
+//                Uri path = Uri.fromFile(filelocation);
+
+                Uri screenPath = Uri.parse("file://" + mScreenPath);
+                intent.putExtra(Intent.EXTRA_STREAM, screenPath);
+
                 startActivity(Intent.createChooser(intent, chooserTitle));
             }
         });
@@ -83,9 +91,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == MAP_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             String filePath = data.getStringExtra(MapsActivity.EXTRA_FILE_PATH);
-            Log.d("MainActivity", "onActivityResult: filePath = " + filePath);
-
-            showMapScreen(filePath);
+            if (filePath != null && !filePath.isEmpty()) {
+                Log.d("MainActivity", "onActivityResult: filePath = " + filePath);
+                mScreenPath = filePath;
+                showMapScreen(filePath);
+            }
         }
     }
 
@@ -102,6 +112,9 @@ public class MainActivity extends AppCompatActivity {
 
     class ReekSpinnerAdapter extends ArrayAdapter<String> {
         private String[] mReeks;
+
+        private int[] mImageResources = {R.drawable.gar, R.drawable.canalization,
+                R.drawable.eggs, R.drawable.garbage, R.drawable.exhaust};
 
         public ReekSpinnerAdapter(@NonNull Context context, int resource, @NonNull String[] objects) {
             super(context, resource, objects);
@@ -123,6 +136,8 @@ public class MainActivity extends AppCompatActivity {
             View row = inflater.inflate(R.layout.reek_row, parent, false);
             TextView label = row.findViewById(R.id.tv_reek);
             label.setText(mReeks[position]);
+            ImageView image = row.findViewById(R.id.iv_reek);
+            image.setImageResource(mImageResources[position]);
 
 //            ImageView icon = (ImageView) row.findViewById(R.id.icon);
 //            if (dayOfWeek[position] == "Котопятница"

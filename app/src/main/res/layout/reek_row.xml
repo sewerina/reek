@@ -6,17 +6,14 @@
 
     <ImageView
         android:id="@+id/iv_reek"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:padding="4dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/reek" />
+        android:layout_width="72dp"
+        android:layout_height="56dp" />
 
     <TextView
         android:id="@+id/tv_reek"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Some" />
+        android:layout_marginStart="4dp" />
 
 </LinearLayout>
