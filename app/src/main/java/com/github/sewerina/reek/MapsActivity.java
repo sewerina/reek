@@ -3,12 +3,15 @@ package com.github.sewerina.reek;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -22,22 +25,28 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private static final String[] LOCATION_PERMISSIONS = new String[]
-            {Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION};
+            {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
     private static final int REQUEST_LOCATION_PERMISSIONS = 0;
     private GoogleMap mMap;
+    private FloatingActionButton mSaveFab;
+    public static final String EXTRA_FILE_PATH = "filePath";
     private MainViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        mSaveFab = findViewById(R.id.fab_save);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -49,14 +58,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mViewModel.getReekObjects().observe(this, new Observer<List<ReekObject>>() {
             @Override
             public void onChanged(List<ReekObject> reekObjects) {
-//                StringBuilder builder = new StringBuilder();
-//
-//                for (ReekObject reek : reekObjects) {
-//                    builder.append(reek.mName).append("\n");
-//                }
-//                mTextView.setText(builder);
-
                 showReeks(reekObjects);
+            }
+        });
+
+        mSaveFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                captureMapScreen();
             }
         });
     }
@@ -66,7 +75,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
 
-        for (ReekObject reek: reekObjects) {
+        for (ReekObject reek : reekObjects) {
             LatLng point = new LatLng(reek.mLatitude, reek.mLongitude);
             mMap.addMarker(new MarkerOptions().position(point).title(reek.mName));
 //            mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
@@ -115,6 +124,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    private void captureMapScreen() {
+        GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
+            Bitmap bitmap;
+            @Override
+            public void onSnapshotReady(Bitmap snapshot) {
+                // TODO Auto-generated method stub
+                bitmap = snapshot;
+                try {
+                    File externalCacheDir = MapsActivity.this.getExternalCacheDir();
+                    File tempFile = File.createTempFile("map" + System.currentTimeMillis(), ".png", externalCacheDir);
+                    FileOutputStream out = new FileOutputStream(tempFile);
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+
+                    Log.d("MapsActivity", "onSnapshotReady: " + bitmap.toString());
+
+                    sendData(tempFile.getPath());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        mMap.snapshot(callback);
+    }
+
+    private void sendData(String filePath) {
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(EXTRA_FILE_PATH, filePath);
+        setResult(RESULT_OK, resultIntent);
+        finish();
+    }
+
     private void setCurrentLocation() {
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -130,7 +171,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
 
             mMap.addMarker(new MarkerOptions().position(last).title("Marker"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(last));
+//            mMap.moveCamera(CameraUpdateFactory.newLatLng(last));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(last, 18));
+
         }
     }
 
