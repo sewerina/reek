@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,6 +24,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -75,9 +78,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
 
+        BitmapDescriptor bitmapDesc = BitmapDescriptorFactory.fromResource(R.drawable.icon_marker_red);
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.icon(bitmapDesc);
         for (ReekObject reek : reekObjects) {
             LatLng point = new LatLng(reek.mLatitude, reek.mLongitude);
-            mMap.addMarker(new MarkerOptions().position(point).title(reek.mName));
+            markerOptions.position(point).title(reek.mName);
+            mMap.addMarker(markerOptions);
+//            mMap.addMarker(new MarkerOptions().position(point).title(reek.mName));
+
 //            mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
             Log.d("MapsActivity", "showReeks: " + reek.mName);
         }
@@ -93,12 +102,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 //        setMoscowLocation();
 
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+
         if (hasLocationPermission()) {
+            mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
             setCurrentLocation();
         } else {
             setMoscowLocation();
@@ -110,12 +124,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
+    @SuppressLint("MissingPermission")
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_LOCATION_PERMISSIONS:
                 if (hasLocationPermission()) {
                     setCurrentLocation();
+                    mMap.setMyLocationEnabled(true);
+                    mMap.getUiSettings().setMyLocationButtonEnabled(true);
                 }
 
             default:
@@ -156,6 +173,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         finish();
     }
 
+    @SuppressLint("MissingPermission")
     private void setCurrentLocation() {
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -170,8 +188,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 last = new LatLng(55.742793, 37.615401);
             }
 
-            mMap.addMarker(new MarkerOptions().position(last).title("Marker"));
-//            mMap.moveCamera(CameraUpdateFactory.newLatLng(last));
+            BitmapDescriptor bitmapDesc = BitmapDescriptorFactory.fromResource(R.drawable.icon_marker_blue);
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(last)
+                    .icon(bitmapDesc)
+                    .title("Вы здесь");
+
+            mMap.addMarker(markerOptions);
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(last, 18));
 
         }

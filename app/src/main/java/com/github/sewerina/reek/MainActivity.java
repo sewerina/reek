@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         mSendComplaintBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = "sewerina.ea@yandex.ru";
+                String email = "";
                 String subject = "Жалоба на неприятный запах";
                 String body = "";
                 String chooserTitle = "Выберите почтовый клиент";
