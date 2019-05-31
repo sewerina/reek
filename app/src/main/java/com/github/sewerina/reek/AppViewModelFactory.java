@@ -18,7 +18,10 @@ public class AppViewModelFactory implements ViewModelProvider.Factory {
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.equals(MainViewModel.class)) {
-            return (T) new MainViewModel(mRequestQueue);
+            return (T) new MainViewModel();
+        }
+        if (modelClass.equals(MapViewModel.class)) {
+            return (T) new MapViewModel(mRequestQueue);
         }
 
         throw new IllegalArgumentException();

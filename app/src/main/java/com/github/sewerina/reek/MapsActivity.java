@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,7 +41,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private FloatingActionButton mSaveFab;
     public static final String EXTRA_FILE_PATH = "filePath";
-    private MainViewModel mViewModel;
+    private MapViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +55,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        mViewModel = ViewModelProviders.of(this, ReekApp.getViewModelFactory()).get(MainViewModel.class);
+        mViewModel = ViewModelProviders.of(this, ReekApp.getViewModelFactory()).get(MapViewModel.class);
 
         mViewModel.getReekObjects().observe(this, new Observer<List<ReekObject>>() {
             @Override

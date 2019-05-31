@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -24,11 +26,34 @@ import androidx.lifecycle.ViewModelProviders;
 public class MainActivity extends AppCompatActivity {
     private static final int MAP_REQUEST_CODE = 13;
     private Spinner mSpinner;
+    private CheckBox mCheckBox1;
+    private CheckBox mCheckBox2;
+    private CheckBox mCheckBox3;
     private Button mSelectLocationBtn;
     private ImageView mMapScreenIv;
     private Button mSendComplaintBtn;
     private ReekSpinnerAdapter mSpinnerAdapter;
     private String mScreenPath;
+
+    private CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            switch (buttonView.getId()) {
+                case R.id.checkBox1:
+                    mViewModel.checkRecipient(0, isChecked);
+                    break;
+
+                case R.id.checkBox2:
+                    mViewModel.checkRecipient(1, isChecked);
+                    break;
+
+                case R.id.checkBox3:
+                    mViewModel.checkRecipient(2, isChecked);
+                    break;
+            }
+        }
+    };
+
     private MainViewModel mViewModel;
 
     @Override
@@ -43,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
                 "Выхлопы от автомобилей"};
 
         mSpinner = findViewById(R.id.spinner);
+        mCheckBox1 = findViewById(R.id.checkBox1);
+        mCheckBox2 = findViewById(R.id.checkBox2);
+        mCheckBox3 = findViewById(R.id.checkBox3);
         mSelectLocationBtn = findViewById(R.id.btn_selectLocation);
         mMapScreenIv = findViewById(R.id.iv_mapScreen);
         mSendComplaintBtn = findViewById(R.id.btn_sendComplaint);
@@ -50,19 +78,21 @@ public class MainActivity extends AppCompatActivity {
         mSpinnerAdapter = new ReekSpinnerAdapter(this, R.layout.reek_row, reeks);
         mSpinner.setAdapter(mSpinnerAdapter);
 
+        mCheckBox1.setOnCheckedChangeListener(mOnCheckedChangeListener);
+        mCheckBox2.setOnCheckedChangeListener(mOnCheckedChangeListener);
+        mCheckBox3.setOnCheckedChangeListener(mOnCheckedChangeListener);
+
         mSendComplaintBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = "";
+                String email = mViewModel.email();
                 String subject = "Жалоба на неприятный запах";
-                String body = "";
+                String body = "Сегодня (дата) я (Ваше Ф.И.О.), находясь в (указать район) районе Москвы/Московской области (см. фото), почувствовал сильный запах (вид запаха). В связи с этим прошу Вас принять меры по установлению источника данного запаха, провести мониторинг ПДК веществ в воздухе и контроль за соблюдением ПДВ загрязняющих веществ предприятий в указанном месте.";
                 String chooserTitle = "Выберите почтовый клиент";
 
                 Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + email));
                 intent.putExtra(Intent.EXTRA_SUBJECT, subject);
                 intent.putExtra(Intent.EXTRA_TEXT, body);
-
-//                Uri path = Uri.fromFile(filelocation);
 
                 Uri screenPath = Uri.parse("file://" + mScreenPath);
                 intent.putExtra(Intent.EXTRA_STREAM, screenPath);
@@ -79,9 +109,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mViewModel = ViewModelProviders.of(this, ReekApp.getViewModelFactory()).get(MainViewModel.class);
-
-
-//        startActivity(new Intent(this, MapsActivity.class));
 
     }
 
@@ -138,15 +165,6 @@ public class MainActivity extends AppCompatActivity {
             label.setText(mReeks[position]);
             ImageView image = row.findViewById(R.id.iv_reek);
             image.setImageResource(mImageResources[position]);
-
-//            ImageView icon = (ImageView) row.findViewById(R.id.icon);
-//            if (dayOfWeek[position] == "Котопятница"
-//                    || dayOfWeek[position] == "Субкота") {
-//                icon.setImageResource(R.drawable.paw_on);
-//            } else {
-//                icon.setImageResource(R.drawable.ic_launcher);
-//            }
-
             return row;
         }
     }
