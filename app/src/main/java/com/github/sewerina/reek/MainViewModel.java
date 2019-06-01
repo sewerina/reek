@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class MainViewModel extends ViewModel {
 
     public final RecipientList mRecipientList = new RecipientList();
+    public final ReekKindList mReekKindList = new ReekKindList();
 
     public MainViewModel() {
     }

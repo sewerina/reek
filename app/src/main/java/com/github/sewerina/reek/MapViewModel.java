@@ -20,14 +20,14 @@ import java.util.List;
 public class MapViewModel extends ViewModel {
     private static final String ARRAY_REQUEST_TAG = "jsonArrayRequest";
     private final RequestQueue mRequestQueue;
-    private final MutableLiveData<List<ReekObject>> mReekObjects = new MutableLiveData<>();
+    private final MutableLiveData<List<ReekMarker>> mReekMarkers = new MutableLiveData<>();
 
     public MapViewModel(RequestQueue requestQueue) {
         mRequestQueue = requestQueue;
     }
 
-    public LiveData<List<ReekObject>> getReekObjects() {
-        return mReekObjects;
+    public LiveData<List<ReekMarker>> getReekMarkers() {
+        return mReekMarkers;
     }
 
     public void load() {
@@ -41,7 +41,7 @@ public class MapViewModel extends ViewModel {
                             @Override
                             public void onResponse(JSONArray response) {
                                 try {
-                                    List<ReekObject> reekObjects = new ArrayList<>();
+                                    List<ReekMarker> reekObjects = new ArrayList<>();
                                     for (int i = 0; i < response.length(); i++) {
                                         JSONObject obj = (JSONObject) response.get(i);
                                         JSONObject cells = (JSONObject) obj.get("Cells");
@@ -50,9 +50,9 @@ public class MapViewModel extends ViewModel {
                                         JSONArray coordinates = (JSONArray) geoData.get("coordinates");
                                         double latitude = coordinates.getDouble(1);
                                         double longitude = coordinates.getDouble(0);
-                                        reekObjects.add(new ReekObject(fullName, latitude, longitude));
+                                        reekObjects.add(new ReekMarker(fullName, latitude, longitude));
                                     }
-                                    mReekObjects.postValue(reekObjects);
+                                    mReekMarkers.postValue(reekObjects);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }

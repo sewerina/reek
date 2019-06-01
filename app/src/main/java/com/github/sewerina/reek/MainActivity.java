@@ -24,6 +24,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
     private static final int MAP_REQUEST_CODE = 13;
     private Spinner mSpinner;
@@ -50,12 +52,6 @@ public class MainActivity extends AppCompatActivity {
 
         mViewModel = ViewModelProviders.of(this, ReekApp.getViewModelFactory()).get(MainViewModel.class);
 
-        String[] reeks = {"Гарь",
-                "Запах канализации",
-                "Сероводород/Запах тухлых яиц",
-                "Зловоние от свалки мусора",
-                "Выхлопы от автомобилей"};
-
         mSpinner = findViewById(R.id.spinner);
 
         LinearLayout layout = findViewById(R.id.checkbox_linearLayout);
@@ -71,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         mMapScreenIv = findViewById(R.id.iv_mapScreen);
         mSendComplaintBtn = findViewById(R.id.btn_sendComplaint);
 
-        mSpinnerAdapter = new ReekSpinnerAdapter(this, R.layout.reek_row, reeks);
+        mSpinnerAdapter = new ReekSpinnerAdapter(this, R.layout.reek_row, mViewModel.mReekKindList);
         mSpinner.setAdapter(mSpinnerAdapter);
 
         mSendComplaintBtn.setOnClickListener(new View.OnClickListener() {
@@ -127,15 +123,14 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    class ReekSpinnerAdapter extends ArrayAdapter<String> {
-        private String[] mReeks;
+    class ReekSpinnerAdapter extends ArrayAdapter<ReekKind> {
+        private List<ReekKind> mKinds;
+        private int mRowLayout;
 
-        private int[] mImageResources = {R.drawable.gar, R.drawable.canalization,
-                R.drawable.eggs, R.drawable.garbage, R.drawable.exhaust};
-
-        public ReekSpinnerAdapter(@NonNull Context context, int resource, @NonNull String[] objects) {
+        public ReekSpinnerAdapter(@NonNull Context context, int resource, @NonNull List<ReekKind> objects) {
             super(context, resource, objects);
-            mReeks = objects;
+            mRowLayout = resource;
+            mKinds = objects;
         }
 
         @Override
@@ -150,11 +145,14 @@ public class MainActivity extends AppCompatActivity {
 
         private View getCustomView(int position, View convertView, ViewGroup parent) {
             LayoutInflater inflater = getLayoutInflater();
-            View row = inflater.inflate(R.layout.reek_row, parent, false);
+            View row = inflater.inflate(mRowLayout, parent, false);
             TextView label = row.findViewById(R.id.tv_reek);
-            label.setText(mReeks[position]);
             ImageView image = row.findViewById(R.id.iv_reek);
-            image.setImageResource(mImageResources[position]);
+
+            ReekKind kind = mKinds.get(position);
+            label.setText(kind.mName);
+            image.setImageResource(kind.mImageResource);
+
             return row;
         }
     }

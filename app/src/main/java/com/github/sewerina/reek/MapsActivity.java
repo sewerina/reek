@@ -57,10 +57,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mViewModel = ViewModelProviders.of(this, ReekApp.getViewModelFactory()).get(MapViewModel.class);
 
-        mViewModel.getReekObjects().observe(this, new Observer<List<ReekObject>>() {
+        mViewModel.getReekMarkers().observe(this, new Observer<List<ReekMarker>>() {
             @Override
-            public void onChanged(List<ReekObject> reekObjects) {
-                showReeks(reekObjects);
+            public void onChanged(List<ReekMarker> reekMarkers) {
+                showReeks(reekMarkers);
             }
         });
 
@@ -72,7 +72,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void showReeks(List<ReekObject> reekObjects) {
+    private void showReeks(List<ReekMarker> reekMarkers) {
         if (mMap == null) {
             return;
         }
@@ -80,14 +80,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         BitmapDescriptor bitmapDesc = BitmapDescriptorFactory.fromResource(R.drawable.icon_marker_red);
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.icon(bitmapDesc);
-        for (ReekObject reek : reekObjects) {
-            LatLng point = new LatLng(reek.mLatitude, reek.mLongitude);
-            markerOptions.position(point).title(reek.mName);
+        for (ReekMarker marker : reekMarkers) {
+            LatLng point = new LatLng(marker.mLatitude, marker.mLongitude);
+            markerOptions.position(point).title(marker.mName);
             mMap.addMarker(markerOptions);
 //            mMap.addMarker(new MarkerOptions().position(point).title(reek.mName));
 
 //            mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
-            Log.d("MapsActivity", "showReeks: " + reek.mName);
+            Log.d("MapsActivity", "showReeks: " + marker.mName);
         }
     }
 
