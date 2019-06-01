@@ -6,6 +6,7 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/main_linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="4dp"
@@ -22,23 +23,11 @@
             android:layout_height="wrap_content"
             android:text="Выберите из списка адресатов, которым Вы хотите отправить жалобу:" />
 
-        <CheckBox
-            android:id="@+id/checkBox1"
+        <LinearLayout
+            android:id="@+id/checkbox_linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Департамент Росприроднадзора по Центральному федеральному округу" />
-
-        <CheckBox
-            android:id="@+id/checkBox2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Главное управление МЧС России по г.Москве" />
-
-        <CheckBox
-            android:id="@+id/checkBox3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Губернатор Московской области" />
+            android:orientation="vertical" />
 
         <Button
             android:id="@+id/btn_selectLocation"

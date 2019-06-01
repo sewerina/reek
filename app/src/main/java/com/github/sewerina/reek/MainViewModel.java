@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class MainViewModel extends ViewModel {
 
-    private RecipientList mRecipientList = new RecipientList();
+    public final RecipientList mRecipientList = new RecipientList();
 
     public MainViewModel() {
     }

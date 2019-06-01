@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -26,40 +27,28 @@ import androidx.lifecycle.ViewModelProviders;
 public class MainActivity extends AppCompatActivity {
     private static final int MAP_REQUEST_CODE = 13;
     private Spinner mSpinner;
-    private CheckBox mCheckBox1;
-    private CheckBox mCheckBox2;
-    private CheckBox mCheckBox3;
     private Button mSelectLocationBtn;
     private ImageView mMapScreenIv;
     private Button mSendComplaintBtn;
     private ReekSpinnerAdapter mSpinnerAdapter;
     private String mScreenPath;
-
+    private MainViewModel mViewModel;
     private CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            switch (buttonView.getId()) {
-                case R.id.checkBox1:
-                    mViewModel.checkRecipient(0, isChecked);
-                    break;
-
-                case R.id.checkBox2:
-                    mViewModel.checkRecipient(1, isChecked);
-                    break;
-
-                case R.id.checkBox3:
-                    mViewModel.checkRecipient(2, isChecked);
-                    break;
+            Object tag = buttonView.getTag();
+            if (tag instanceof Integer) {
+                mViewModel.checkRecipient((int) tag, isChecked);
             }
         }
     };
-
-    private MainViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mViewModel = ViewModelProviders.of(this, ReekApp.getViewModelFactory()).get(MainViewModel.class);
 
         String[] reeks = {"Гарь",
                 "Запах канализации",
@@ -68,19 +57,22 @@ public class MainActivity extends AppCompatActivity {
                 "Выхлопы от автомобилей"};
 
         mSpinner = findViewById(R.id.spinner);
-        mCheckBox1 = findViewById(R.id.checkBox1);
-        mCheckBox2 = findViewById(R.id.checkBox2);
-        mCheckBox3 = findViewById(R.id.checkBox3);
+
+        LinearLayout layout = findViewById(R.id.checkbox_linearLayout);
+        for (int i = 0; i < mViewModel.mRecipientList.size(); i++) {
+            CheckBox checkBox = new CheckBox(this);
+            checkBox.setTag(i);
+            checkBox.setText(mViewModel.mRecipientList.get(i).mTitle);
+            checkBox.setOnCheckedChangeListener(mOnCheckedChangeListener);
+            layout.addView(checkBox);
+        }
+
         mSelectLocationBtn = findViewById(R.id.btn_selectLocation);
         mMapScreenIv = findViewById(R.id.iv_mapScreen);
         mSendComplaintBtn = findViewById(R.id.btn_sendComplaint);
 
         mSpinnerAdapter = new ReekSpinnerAdapter(this, R.layout.reek_row, reeks);
         mSpinner.setAdapter(mSpinnerAdapter);
-
-        mCheckBox1.setOnCheckedChangeListener(mOnCheckedChangeListener);
-        mCheckBox2.setOnCheckedChangeListener(mOnCheckedChangeListener);
-        mCheckBox3.setOnCheckedChangeListener(mOnCheckedChangeListener);
 
         mSendComplaintBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,8 +99,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(new Intent(v.getContext(), MapsActivity.class), MAP_REQUEST_CODE);
             }
         });
-
-        mViewModel = ViewModelProviders.of(this, ReekApp.getViewModelFactory()).get(MainViewModel.class);
 
     }
 
