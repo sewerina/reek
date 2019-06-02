@@ -83,13 +83,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        mSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                mViewModel.setSelectReekPosition(position);
-//            }
-//        });
-
         mSendComplaintBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,8 +96,10 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra(Intent.EXTRA_SUBJECT, subject);
                 intent.putExtra(Intent.EXTRA_TEXT, body);
 
-                Uri screenPath = Uri.parse("file://" + mScreenPath);
-                intent.putExtra(Intent.EXTRA_STREAM, screenPath);
+                if (mScreenPath != null) {
+                    Uri screenPath = Uri.parse("file://" + mScreenPath);
+                    intent.putExtra(Intent.EXTRA_STREAM, screenPath);
+                }
 
                 startActivity(Intent.createChooser(intent, chooserTitle));
             }
