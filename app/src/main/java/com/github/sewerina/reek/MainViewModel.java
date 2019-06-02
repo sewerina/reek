@@ -16,8 +16,8 @@ public class MainViewModel extends ViewModel {
 
     public final RecipientList mRecipientList = new RecipientList();
     public final ReekKindList mReekKindList = new ReekKindList();
-    private final String template = "Сегодня {date} я (Ваше Ф.И.О.), находясь в (указать район) районе Москвы/Московской области (см. фото), почувствовал сильный запах (вид запаха). В связи с этим прошу Вас принять меры по установлению источника данного запаха, провести мониторинг ПДК веществ в воздухе и контроль за соблюдением ПДВ загрязняющих веществ предприятий в указанном месте.";
-
+    private final String template = "Сегодня {date} я (Ваше Ф.И.О.), находясь в (указать район) районе Москвы/Московской области (см. фото), почувствовал сильный запах {reek}. В связи с этим прошу Вас принять меры по установлению источника данного запаха, провести мониторинг ПДК веществ в воздухе и контроль за соблюдением ПДВ загрязняющих веществ предприятий в указанном месте.";
+    private int mSelectReekPosition;
 
     public MainViewModel() {
     }
@@ -39,9 +39,9 @@ public class MainViewModel extends ViewModel {
 
     public String body() {
         String date = currentDate();
+        String reek = mReekKindList.get(mSelectReekPosition).mEmailText;
 
-        return template.replace("{date}", date);
-
+        return template.replace("{date}", date).replace("{reek}", reek);
     }
 
     private String currentDate() {
@@ -80,5 +80,11 @@ public class MainViewModel extends ViewModel {
         // Var4
 //        java.text.DateFormat dateFormat = DateFormat.getDateFormat();
 //        dateFormat.format(new Date());
+    }
+
+    public void setSelectReekPosition(int position) {
+        if (position >= 0) {
+            mSelectReekPosition = position;
+        }
     }
 }
