@@ -18,9 +18,10 @@ import java.util.Date;
 public class MainViewModel extends ViewModel {
 
     private MutableLiveData<String> mMapScreenPath = new MutableLiveData<>();
+    private String mCurrentAddress;
     public final RecipientList mRecipientList = new RecipientList();
     public final ReekKindList mReekKindList = new ReekKindList();
-    private final String template = "Сегодня {date} я (Ваше Ф.И.О.), находясь в (указать район) районе Москвы/Московской области (см. фото), почувствовал сильный запах {reek}. В связи с этим прошу Вас принять меры по установлению источника данного запаха, провести мониторинг ПДК веществ в воздухе и контроль за соблюдением ПДВ загрязняющих веществ предприятий в указанном месте.";
+    private final String template = "Сегодня {date} я (Ваше Ф.И.О.), находясь по адресу (указать район) Москвы/Московской области (см. фото), почувствовал сильный запах {reek}. В связи с этим прошу Вас принять меры по установлению источника данного запаха, провести мониторинг ПДК веществ в воздухе и контроль за соблюдением ПДВ загрязняющих веществ предприятий в указанном месте.";
     private int mSelectReekPosition;
 
     public MainViewModel() {
@@ -60,6 +61,13 @@ public class MainViewModel extends ViewModel {
     public String body() {
         String date = currentDate();
         String reek = mReekKindList.get(mSelectReekPosition).mEmailText;
+
+        if (hasCurrentAddress()) {
+            String currentAddress = mCurrentAddress;
+            return template.replace("{date}", date)
+                    .replace("(указать район) Москвы/Московской области", currentAddress)
+                    .replace("{reek}", reek);
+        }
 
         return template.replace("{date}", date).replace("{reek}", reek);
     }
@@ -106,5 +114,13 @@ public class MainViewModel extends ViewModel {
         if (position >= 0) {
             mSelectReekPosition = position;
         }
+    }
+
+    public void setCurrentAddress(String currentAddress) {
+        mCurrentAddress = currentAddress;
+    }
+
+    private boolean hasCurrentAddress() {
+        return mCurrentAddress != null && !mCurrentAddress.isEmpty();
     }
 }

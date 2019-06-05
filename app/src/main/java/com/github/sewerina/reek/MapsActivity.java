@@ -6,12 +6,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -33,11 +36,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     public static final String EXTRA_FILE_PATH = "filePath";
+    public static final String EXTRA_CURRENT_ADDRESS = "currentAddress";
     private static final String[] LOCATION_PERMISSIONS = new String[]
             {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
     private static final int REQUEST_LOCATION_PERMISSIONS = 0;
@@ -140,6 +146,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .title("Здесь");
                 mCurrentMarker = mMap.addMarker(markerOptions);
 
+//                Geocoder geocoder = new Geocoder(MapsActivity.this, Locale.getDefault());
+//                try {
+//                    List<Address> addresses  = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+//                    String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+//                    String city = addresses.get(0).getLocality();
+//                    String state = addresses.get(0).getAdminArea();
+//                    String country = addresses.get(0).getCountryName();
+//                    String postalCode = addresses.get(0).getPostalCode();
+//                    String knownName = addresses.get(0).getFeatureName();
+//
+//                    Log.i("MapsActivity", "onMapClick: address = " + address);
+//                    Log.i("MapsActivity", "onMapClick: city = " + city);
+//                    Log.i("MapsActivity", "onMapClick: state = " + state);
+//                    Log.i("MapsActivity", "onMapClick: country = " + country);
+//                    Log.i("MapsActivity", "onMapClick: postalCode = " + postalCode);
+//                    Log.i("MapsActivity", "onMapClick: knownName = " + knownName);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+
 //                Toast.makeText(MapsActivity.this, "On map click", Toast.LENGTH_SHORT).show();
             }
         });
@@ -196,9 +222,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.snapshot(callback);
     }
 
+    private String currentAddress(LatLng currentLatLng) {
+        Geocoder geocoder = new Geocoder(MapsActivity.this, Locale.getDefault());
+        try {
+            List<Address> addresses  = geocoder.getFromLocation(currentLatLng.latitude, currentLatLng.longitude, 1);
+            return addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private void sendData(String filePath) {
         Intent resultIntent = new Intent();
         resultIntent.putExtra(EXTRA_FILE_PATH, filePath);
+
+        if (mCurrentMarker != null && mCurrentMarker.getPosition() != null && currentAddress(mCurrentMarker.getPosition()) != null) {
+            resultIntent.putExtra(EXTRA_CURRENT_ADDRESS, currentAddress(mCurrentMarker.getPosition()));
+        }
+
         setResult(RESULT_OK, resultIntent);
         finish();
     }

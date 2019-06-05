@@ -141,6 +141,9 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == MAP_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             String filePath = data.getStringExtra(MapsActivity.EXTRA_FILE_PATH);
             mViewModel.setMapScreenPath(filePath);
+
+            String currentAddress = data.getStringExtra(MapsActivity.EXTRA_CURRENT_ADDRESS);
+            mViewModel.setCurrentAddress(currentAddress);
         }
     }
 
@@ -153,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void deleteMapScreen() {
         mViewModel.setMapScreenPath(null);
+        mViewModel.setCurrentAddress(null);
     }
 
     private void hideMapScreen() {
