@@ -26,6 +26,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -35,13 +36,14 @@ import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    public static final String EXTRA_FILE_PATH = "filePath";
     private static final String[] LOCATION_PERMISSIONS = new String[]
             {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
     private static final int REQUEST_LOCATION_PERMISSIONS = 0;
     private GoogleMap mMap;
     private FloatingActionButton mSaveFab;
-    public static final String EXTRA_FILE_PATH = "filePath";
     private MapViewModel mViewModel;
+    private Marker mCurrentMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +121,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 requestPermissions(LOCATION_PERMISSIONS, REQUEST_LOCATION_PERMISSIONS);
             }
         }
+
         mViewModel.load();
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                if (mCurrentMarker != null) {
+                    mCurrentMarker.remove();
+                    mCurrentMarker = null;
+                }
+                BitmapDescriptor bitmapDesc = BitmapDescriptorFactory.fromResource(R.drawable.icon_marker_blue);
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(latLng)
+                        .icon(bitmapDesc)
+                        .title("Здесь");
+                mCurrentMarker = mMap.addMarker(markerOptions);
+
+//                Toast.makeText(MapsActivity.this, "On map click", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+//        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+//            @Override
+//            public void onMapLongClick(LatLng latLng) {
+//                Toast.makeText(MapsActivity.this, "On map long click", Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
     @Override
@@ -143,6 +171,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void captureMapScreen() {
         GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
             Bitmap bitmap;
+
             @Override
             public void onSnapshotReady(Bitmap snapshot) {
                 // TODO Auto-generated method stub
@@ -187,13 +216,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 last = new LatLng(55.742793, 37.615401);
             }
 
-            BitmapDescriptor bitmapDesc = BitmapDescriptorFactory.fromResource(R.drawable.icon_marker_blue);
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(last)
-                    .icon(bitmapDesc)
-                    .title("Вы здесь");
+//            BitmapDescriptor bitmapDesc = BitmapDescriptorFactory.fromResource(R.drawable.icon_marker_blue);
+//            MarkerOptions markerOptions = new MarkerOptions();
+//            markerOptions.position(last)
+//                    .icon(bitmapDesc)
+//                    .title("Вы здесь");
 
-            mMap.addMarker(markerOptions);
+//            mMap.addMarker(markerOptions);
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(last, 18));
 
         }
@@ -201,7 +230,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void setMoscowLocation() {
         LatLng last = new LatLng(55.742793, 37.615401);
-        mMap.addMarker(new MarkerOptions().position(last).title("Marker"));
+//        mMap.addMarker(new MarkerOptions().position(last).title("Marker"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(last));
     }
 
