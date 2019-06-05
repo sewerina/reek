@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
@@ -41,7 +42,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
     private static final int REQUEST_LOCATION_PERMISSIONS = 0;
     private GoogleMap mMap;
-    private FloatingActionButton mSaveFab;
+//    private FloatingActionButton mSaveFab;
+    private ExtendedFloatingActionButton mSaveFab;
     private MapViewModel mViewModel;
     private Marker mCurrentMarker;
 

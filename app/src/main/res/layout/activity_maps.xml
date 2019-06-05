@@ -5,15 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|start"
-        android:layout_margin="16dp"
-        app:backgroundTint="#FFEB3B"
-        app:elevation="4dp"
-        app:srcCompat="@drawable/ic_save" />
+    <!--<com.google.android.material.floatingactionbutton.FloatingActionButton-->
+        <!--android:id="@+id/fab_save"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="top|start"-->
+        <!--android:layout_margin="16dp"-->
+        <!--app:backgroundTint="#FFEB3B"-->
+        <!--app:elevation="4dp"-->
+        <!--app:srcCompat="@drawable/ic_save" />-->
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:map="http://schemas.android.com/apk/res-auto"
@@ -30,6 +30,16 @@
         map:uiZoomControls="true"
         map:uiZoomGestures="true"
         tools:context=".MapsActivity" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="Скрин места"
+        app:layout_anchor="@id/map"
+        app:icon="@drawable/ic_save"
+        app:layout_anchorGravity="bottom|center"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

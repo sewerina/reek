@@ -34,7 +34,8 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps">
+            android:label="@string/title_activity_maps"
+            android:theme="@style/MapTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.github.sewerina.reek.MainActivity" />
