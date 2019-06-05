@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import java.util.List;
@@ -31,10 +33,10 @@ public class MainActivity extends AppCompatActivity {
     private static final int MAP_REQUEST_CODE = 13;
     private Spinner mSpinner;
     private Button mSelectLocationBtn;
+    private ImageButton mDeleteScreenIBtn;
     private ImageView mMapScreenIv;
     private Button mSendComplaintBtn;
     private ReekSpinnerAdapter mSpinnerAdapter;
-    private String mScreenPath;
     private MainViewModel mViewModel;
     private CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
@@ -52,6 +54,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mViewModel = ViewModelProviders.of(this, ReekApp.getViewModelFactory()).get(MainViewModel.class);
+        mViewModel.mapScreenPath().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String path) {
+                if (path != null && !path.isEmpty()) {
+                    showMapScreen(path);
+                } else {
+                    hideMapScreen();
+                }
+            }
+        });
 
         mSpinner = findViewById(R.id.spinner);
 
@@ -65,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         mSelectLocationBtn = findViewById(R.id.btn_selectLocation);
+        mDeleteScreenIBtn = findViewById(R.id.ibtn_deleteScreen);
         mMapScreenIv = findViewById(R.id.iv_mapScreen);
         mSendComplaintBtn = findViewById(R.id.btn_sendComplaint);
 
@@ -96,8 +109,8 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra(Intent.EXTRA_SUBJECT, subject);
                 intent.putExtra(Intent.EXTRA_TEXT, body);
 
-                if (mScreenPath != null) {
-                    Uri screenPath = Uri.parse("file://" + mScreenPath);
+                if (mViewModel.hasMapScreen()) {
+                    Uri screenPath = mViewModel.mapScreenUri();
                     intent.putExtra(Intent.EXTRA_STREAM, screenPath);
                 }
 
@@ -112,6 +125,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        mDeleteScreenIBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteMapScreen();
+            }
+        });
+
     }
 
     @Override
@@ -120,11 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == MAP_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             String filePath = data.getStringExtra(MapsActivity.EXTRA_FILE_PATH);
-            if (filePath != null && !filePath.isEmpty()) {
-                Log.d("MainActivity", "onActivityResult: filePath = " + filePath);
-                mScreenPath = filePath;
-                showMapScreen(filePath);
-            }
+            mViewModel.setMapScreenPath(filePath);
         }
     }
 
@@ -132,6 +148,16 @@ public class MainActivity extends AppCompatActivity {
         Bitmap screen = BitmapFactory.decodeFile(filePath);
         mMapScreenIv.setImageBitmap(screen);
         mMapScreenIv.setVisibility(View.VISIBLE);
+        mDeleteScreenIBtn.setVisibility(View.VISIBLE);
+    }
+
+    private void deleteMapScreen() {
+        mViewModel.setMapScreenPath(null);
+    }
+
+    private void hideMapScreen() {
+        mMapScreenIv.setVisibility(View.GONE);
+        mDeleteScreenIBtn.setVisibility(View.GONE);
     }
 
     @Override

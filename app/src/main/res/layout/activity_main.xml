@@ -29,26 +29,45 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" />
 
-        <Button
-            android:id="@+id/btn_selectLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_location"
-            android:drawablePadding="4dp"
-            android:text="Укажите место на карте"
-            android:textAllCaps="false" />
-
-        <ImageView
-            android:id="@+id/iv_mapScreen"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_gravity="center"
-            android:visibility="gone" />
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btn_selectLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:drawableStart="@drawable/ic_location"
+                android:drawablePadding="4dp"
+                android:text="Укажите место на карте"
+                android:textAllCaps="false" />
+
+            <ImageView
+                android:id="@+id/iv_mapScreen"
+                android:layout_width="wrap_content"
+                android:layout_height="300dp"
+                android:layout_below="@id/btn_selectLocation"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/ibtn_deleteScreen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btn_selectLocation"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/ic_delete_screen"
+                android:visibility="gone" />
+
+        </RelativeLayout>
 
         <Button
             android:id="@+id/btn_sendComplaint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:drawableStart="@drawable/ic_send"
             android:drawablePadding="4dp"
             android:text="Отправить жалобу"

@@ -1,8 +1,11 @@
 package com.github.sewerina.reek;
 
 import android.icu.text.SimpleDateFormat;
+import android.net.Uri;
 import android.text.TextUtils;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
@@ -14,12 +17,29 @@ import java.util.Date;
 
 public class MainViewModel extends ViewModel {
 
+    private MutableLiveData<String> mMapScreenPath = new MutableLiveData<>();
     public final RecipientList mRecipientList = new RecipientList();
     public final ReekKindList mReekKindList = new ReekKindList();
     private final String template = "Сегодня {date} я (Ваше Ф.И.О.), находясь в (указать район) районе Москвы/Московской области (см. фото), почувствовал сильный запах {reek}. В связи с этим прошу Вас принять меры по установлению источника данного запаха, провести мониторинг ПДК веществ в воздухе и контроль за соблюдением ПДВ загрязняющих веществ предприятий в указанном месте.";
     private int mSelectReekPosition;
 
     public MainViewModel() {
+    }
+
+    public LiveData<String> mapScreenPath() {
+        return mMapScreenPath;
+    }
+
+    public void setMapScreenPath(String path) {
+            mMapScreenPath.postValue(path);
+    }
+
+    public boolean hasMapScreen() {
+        return mMapScreenPath.getValue() != null && !mMapScreenPath.getValue().isEmpty();
+    }
+
+    public Uri mapScreenUri() {
+        return Uri.parse("file://" + mMapScreenPath.getValue());
     }
 
     public void checkRecipient(int position, boolean isChecked) {
