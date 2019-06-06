@@ -14,7 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -32,7 +31,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -48,7 +46,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
     private static final int REQUEST_LOCATION_PERMISSIONS = 0;
     private GoogleMap mMap;
-//    private FloatingActionButton mSaveFab;
+    //    private FloatingActionButton mSaveFab;
     private ExtendedFloatingActionButton mSaveFab;
     private MapViewModel mViewModel;
     private Marker mCurrentMarker;
@@ -225,7 +223,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String currentAddress(LatLng currentLatLng) {
         Geocoder geocoder = new Geocoder(MapsActivity.this, Locale.getDefault());
         try {
-            List<Address> addresses  = geocoder.getFromLocation(currentLatLng.latitude, currentLatLng.longitude, 1);
+            List<Address> addresses = geocoder.getFromLocation(currentLatLng.latitude, currentLatLng.longitude, 1);
             return addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
         } catch (IOException e) {
             e.printStackTrace();
@@ -237,8 +235,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Intent resultIntent = new Intent();
         resultIntent.putExtra(EXTRA_FILE_PATH, filePath);
 
-        if (mCurrentMarker != null && mCurrentMarker.getPosition() != null && currentAddress(mCurrentMarker.getPosition()) != null) {
-            resultIntent.putExtra(EXTRA_CURRENT_ADDRESS, currentAddress(mCurrentMarker.getPosition()));
+        if (mCurrentMarker != null && mCurrentMarker.getPosition() != null) {
+            String address = currentAddress(mCurrentMarker.getPosition());
+            if (address != null) {
+                resultIntent.putExtra(EXTRA_CURRENT_ADDRESS, address);
+            }
         }
 
         setResult(RESULT_OK, resultIntent);

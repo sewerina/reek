@@ -11,8 +11,8 @@ import androidx.lifecycle.ViewModel;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class MainViewModel extends ViewModel {
@@ -21,7 +21,7 @@ public class MainViewModel extends ViewModel {
     private String mCurrentAddress;
     public final RecipientList mRecipientList = new RecipientList();
     public final ReekKindList mReekKindList = new ReekKindList();
-    private final String template = "Сегодня {date} я (Ваше Ф.И.О.), находясь по адресу (указать район) Москвы/Московской области (см. фото), почувствовал сильный запах {reek}. В связи с этим прошу Вас принять меры по установлению источника данного запаха, провести мониторинг ПДК веществ в воздухе и контроль за соблюдением ПДВ загрязняющих веществ предприятий в указанном месте.";
+    private final String template = "Сегодня {date} я (Ваше Ф.И.О.), находясь по адресу (указать район) Москвы/Московской области (см. скрин карты), почувствовал сильный запах {reek}. В связи с этим прошу Вас принять меры по установлению источника данного запаха, провести мониторинг ПДК веществ в воздухе и контроль за соблюдением ПДВ загрязняющих веществ предприятий в указанном месте.";
     private int mSelectReekPosition;
 
     public MainViewModel() {
@@ -61,15 +61,21 @@ public class MainViewModel extends ViewModel {
     public String body() {
         String date = currentDate();
         String reek = mReekKindList.get(mSelectReekPosition).mEmailText;
+        String result = template.replace("{date}", date).replace("{reek}", reek);
 
         if (hasCurrentAddress()) {
-            String currentAddress = mCurrentAddress;
-            return template.replace("{date}", date)
-                    .replace("(указать район) Москвы/Московской области", currentAddress)
-                    .replace("{reek}", reek);
+            Pattern pattern = Pattern.compile(", \\d{6}");
+            Matcher matcher = pattern.matcher(mCurrentAddress);
+            String currentAddress = matcher.replaceAll("");
+            currentAddress = currentAddress.replace(", Россия", "");
+            result = result.replace("(указать район) Москвы/Московской области", currentAddress);
         }
 
-        return template.replace("{date}", date).replace("{reek}", reek);
+        if (!hasMapScreen()) {
+            result = result.replace(" (см. скрин карты)", "");
+        }
+
+        return result;
     }
 
     private String currentDate() {
