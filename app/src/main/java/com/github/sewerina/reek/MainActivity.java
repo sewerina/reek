@@ -27,6 +27,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mSelectLocationBtn;
     private ImageButton mDeleteScreenIBtn;
     private ImageView mMapScreenIv;
-    private Button mSendComplaintBtn;
+    private ExtendedFloatingActionButton mSendComplaintBtn;
     private ReekSpinnerAdapter mSpinnerAdapter;
     private MainViewModel mViewModel;
     private CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
