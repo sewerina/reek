@@ -27,6 +27,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import java.util.List;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int MAP_REQUEST_CODE = 13;
     private Spinner mSpinner;
     private Button mSelectLocationBtn;
+    private MaterialCardView mCardView;
     private ImageButton mDeleteScreenIBtn;
     private ImageView mMapScreenIv;
     private ExtendedFloatingActionButton mSendComplaintBtn;
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         mSelectLocationBtn = findViewById(R.id.btn_selectLocation);
+        mCardView = findViewById(R.id.matCardView);
         mDeleteScreenIBtn = findViewById(R.id.ibtn_deleteScreen);
         mMapScreenIv = findViewById(R.id.iv_mapScreen);
         mSendComplaintBtn = findViewById(R.id.btn_sendComplaint);
@@ -151,6 +154,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void showMapScreen(String filePath) {
         Bitmap screen = BitmapFactory.decodeFile(filePath);
+
+        mCardView.setVisibility(View.VISIBLE);
+
         mMapScreenIv.setImageBitmap(screen);
         mMapScreenIv.setVisibility(View.VISIBLE);
         mDeleteScreenIBtn.setVisibility(View.VISIBLE);
@@ -162,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void hideMapScreen() {
+        mCardView.setVisibility(View.GONE);
         mMapScreenIv.setVisibility(View.GONE);
         mDeleteScreenIBtn.setVisibility(View.GONE);
     }

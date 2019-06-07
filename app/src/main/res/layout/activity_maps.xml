@@ -37,6 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:text="Скрин места"
+        android:textAllCaps="false"
         app:layout_anchor="@id/map"
         app:icon="@drawable/ic_save"
         app:layout_anchorGravity="bottom|center"/>

@@ -21,7 +21,7 @@ public class MainViewModel extends ViewModel {
     private String mCurrentAddress;
     public final RecipientList mRecipientList = new RecipientList();
     public final ReekKindList mReekKindList = new ReekKindList();
-    private final String template = "Сегодня {date} я (Ваше Ф.И.О.), находясь по адресу (указать район) Москвы/Московской области (см. скрин карты), почувствовал сильный запах {reek}. В связи с этим прошу Вас принять меры по установлению источника данного запаха, провести мониторинг ПДК веществ в воздухе и контроль за соблюдением ПДВ загрязняющих веществ предприятий в указанном месте.";
+    private final String template = "Сегодня {date} я (Ваше Ф.И.О.), находясь по адресу (указать район) Москвы/Московской области (см. скрин карты), почувствовал(-а) сильный запах {reek}. В связи с этим прошу Вас принять меры по установлению источника данного запаха, провести мониторинг ПДК загрязняющих веществ в воздухе, проконтролировать соблюдение предприятиями в указанном месте ПДВ загрязняющих веществ.";
     private int mSelectReekPosition;
 
     public MainViewModel() {
