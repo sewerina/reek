@@ -65,10 +65,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mViewModel = ViewModelProviders.of(this, ReekApp.getViewModelFactory()).get(MapViewModel.class);
 
-        mViewModel.getReekMarkers().observe(this, new Observer<List<ReekMarker>>() {
+        mViewModel.getIndustrialCompaniesMarkers().observe(this, new Observer<List<ReekMarker>>() {
             @Override
             public void onChanged(List<ReekMarker> reekMarkers) {
-                showReeks(reekMarkers);
+                showReeks(reekMarkers, R.drawable.icon_marker_red);
+            }
+        });
+
+        mViewModel.getLargeWasteBinsMarkers().observe(this, new Observer<List<ReekMarker>>() {
+            @Override
+            public void onChanged(List<ReekMarker> reekMarkers) {
+                showReeks(reekMarkers, R.drawable.icon_marker_orange);
             }
         });
 
@@ -80,12 +87,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void showReeks(List<ReekMarker> reekMarkers) {
+    private void showReeks(List<ReekMarker> reekMarkers, int drawResource) {
         if (mMap == null) {
             return;
         }
 
-        BitmapDescriptor bitmapDesc = BitmapDescriptorFactory.fromResource(R.drawable.icon_marker_red);
+        BitmapDescriptor bitmapDesc = BitmapDescriptorFactory.fromResource(drawResource);
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.icon(bitmapDesc);
         for (ReekMarker marker : reekMarkers) {
@@ -128,7 +135,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
 
-        mViewModel.load();
+        mViewModel.loadIndustrialCompanies();
+        mViewModel.loadLargeWasteBins();
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
