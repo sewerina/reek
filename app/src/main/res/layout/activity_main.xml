@@ -20,7 +20,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Выберите из списка ниже запах, который Вы чувствуете:" />
+                android:text="@string/tv_chooseReek" />
 
             <Spinner
                 android:id="@+id/spinner"
@@ -34,7 +34,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Выберите из списка адресатов, которым Вы хотите отправить жалобу:" />
+                android:text="@string/tv_chooseRecipients" />
 
             <LinearLayout
                 android:id="@+id/checkbox_linearLayout"
@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="Укажите место на карте"
+                android:text="@string/btn_selectLocation"
                 android:textAllCaps="false"
                 app:icon="@drawable/ic_location"
                 app:iconGravity="start" />
@@ -90,7 +90,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="8dp"
-        android:text="Отправить жалобу"
+        android:text="@string/eFab_sendComplaint"
         android:textAllCaps="false"
         app:icon="@drawable/ic_send" />
 

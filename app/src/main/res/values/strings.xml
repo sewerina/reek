@@ -1,4 +1,17 @@
 <resources>
     <string name="app_name">Reek</string>
     <string name="title_activity_maps">Map</string>
+    <string name="tv_chooseReek">Выберите из списка ниже запах, который Вы чувствуете:</string>
+    <string name="tv_chooseRecipients">Выберите из списка адресатов, которым Вы хотите отправить жалобу:</string>
+    <string name="btn_selectLocation">Укажите место на карте</string>
+    <string name="eFab_sendComplaint">Отправить жалобу</string>
+    <string name="eFab_mapScreen">Скрин места</string>
+    <string name="menuItem_appInfo">О приложении</string>
+
+    <string name="tv_appInfo">
+        <![CDATA[
+        <p>Приложение “Name” позволит Вам отправить жалобу на загрязнение воздуха и неприятные запахи в компетентные органы государственной власти по городу Москва и Московской области.
+        <br>Выберите неприятный запах, адресата и укажите местоположение на карте, “Name” создаст для Вас электронное письмо.</p>
+]]>
+        </string>
 </resources>
