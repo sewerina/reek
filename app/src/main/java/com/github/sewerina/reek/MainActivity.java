@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
             CheckBox checkBox = new CheckBox(this);
             checkBox.setTag(i);
             checkBox.setText(mViewModel.mRecipientList.get(i).mTitle);
+            checkBox.setChecked(mViewModel.mRecipientList.get(i).mIsSelected);
             checkBox.setOnCheckedChangeListener(mOnCheckedChangeListener);
             layout.addView(checkBox);
         }
