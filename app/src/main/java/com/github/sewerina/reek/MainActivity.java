@@ -110,9 +110,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String email = mViewModel.email();
-                String subject = "Жалоба на неприятный запах";
+                String subject = getString(R.string.email_subject);
                 String body = mViewModel.body();
-                String chooserTitle = "Выберите почтовый клиент";
+                String chooserTitle = getString(R.string.email_client);
 
                 Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + email));
                 intent.putExtra(Intent.EXTRA_SUBJECT, subject);
@@ -140,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
                 deleteMapScreen();
             }
         });
-
     }
 
     @Override

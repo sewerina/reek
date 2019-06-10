@@ -39,14 +39,12 @@ import java.util.List;
 import java.util.Locale;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-
     public static final String EXTRA_FILE_PATH = "filePath";
     public static final String EXTRA_CURRENT_ADDRESS = "currentAddress";
     private static final String[] LOCATION_PERMISSIONS = new String[]
             {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
     private static final int REQUEST_LOCATION_PERMISSIONS = 0;
     private GoogleMap mMap;
-    //    private FloatingActionButton mSaveFab;
     private ExtendedFloatingActionButton mSaveFab;
     private MapViewModel mViewModel;
     private Marker mCurrentMarker;
@@ -99,9 +97,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             LatLng point = new LatLng(marker.mLatitude, marker.mLongitude);
             markerOptions.position(point).title(marker.mName);
             mMap.addMarker(markerOptions);
-//            mMap.addMarker(new MarkerOptions().position(point).title(reek.mName));
 
-//            mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
             Log.d("MapsActivity", "showReeks: " + marker.mName);
         }
     }

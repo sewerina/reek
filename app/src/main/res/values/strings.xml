@@ -6,6 +6,7 @@
     <string name="btn_selectLocation">Укажите место на карте</string>
     <string name="eFab_sendComplaint">Отправить жалобу</string>
     <string name="eFab_mapScreen">Скрин места</string>
+    <string name="tv_addMarker">Добавьте метку</string>
     <string name="menuItem_appInfo">О приложении</string>
 
     <string name="tv_appInfo">
@@ -22,4 +23,7 @@
         </small></p>
 ]]>
         </string>
+    <string name="email_subject">Жалоба на неприятный запах</string>
+    <string name="email_client">Выберите почтовый клиент</string>
+
 </resources>

@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 public class MainViewModel extends ViewModel {
 
     private MutableLiveData<String> mMapScreenPath = new MutableLiveData<>();
