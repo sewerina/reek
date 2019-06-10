@@ -30,6 +30,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
@@ -110,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email = mViewModel.email();
                 String subject = "Жалоба на неприятный запах";
-//                String body = "Сегодня (дата) я (Ваше Ф.И.О.), находясь в (указать район) районе Москвы/Московской области (см. фото), почувствовал сильный запах (вид запаха). В связи с этим прошу Вас принять меры по установлению источника данного запаха, провести мониторинг ПДК веществ в воздухе и контроль за соблюдением ПДВ загрязняющих веществ предприятий в указанном месте.";
                 String body = mViewModel.body();
                 String chooserTitle = "Выберите почтовый клиент";
 
