@@ -15,6 +15,5 @@ public class AppInfoActivity extends AppCompatActivity {
 
         TextView appInfo = findViewById(R.id.tv_appInfo);
         appInfo.setText(Html.fromHtml(getString(R.string.tv_appInfo)));
-
     }
 }
