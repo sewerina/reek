@@ -155,27 +155,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void showMapScreen(String filePath) {
-        Bitmap screen = BitmapFactory.decodeFile(filePath);
-
-        mCardView.setVisibility(View.VISIBLE);
-
-        mMapScreenIv.setImageBitmap(screen);
-        mMapScreenIv.setVisibility(View.VISIBLE);
-        mDeleteScreenIBtn.setVisibility(View.VISIBLE);
-    }
-
-    private void deleteMapScreen() {
-        mViewModel.setMapScreenPath(null);
-        mViewModel.setCurrentAddress(null);
-    }
-
-    private void hideMapScreen() {
-        mCardView.setVisibility(View.GONE);
-        mMapScreenIv.setVisibility(View.GONE);
-        mDeleteScreenIBtn.setVisibility(View.GONE);
-    }
-
     @Override
     protected void onStop() {
         super.onStop();
@@ -197,6 +176,25 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showMapScreen(String filePath) {
+        Bitmap screen = BitmapFactory.decodeFile(filePath);
+        mCardView.setVisibility(View.VISIBLE);
+        mMapScreenIv.setImageBitmap(screen);
+        mMapScreenIv.setVisibility(View.VISIBLE);
+        mDeleteScreenIBtn.setVisibility(View.VISIBLE);
+    }
+
+    private void deleteMapScreen() {
+        mViewModel.setMapScreenPath(null);
+        mViewModel.setCurrentAddress(null);
+    }
+
+    private void hideMapScreen() {
+        mCardView.setVisibility(View.GONE);
+        mMapScreenIv.setVisibility(View.GONE);
+        mDeleteScreenIBtn.setVisibility(View.GONE);
     }
 
     class ReekSpinnerAdapter extends ArrayAdapter<ReekKind> {

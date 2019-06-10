@@ -59,7 +59,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
 
         mViewModel = ViewModelProviders.of(this, ReekApp.getViewModelFactory()).get(MapViewModel.class);
 
@@ -85,24 +87,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void showReeks(List<ReekMarker> reekMarkers, int drawResource) {
-        if (mMap == null) {
-            return;
-        }
-
-        BitmapDescriptor bitmapDesc = BitmapDescriptorFactory.fromResource(drawResource);
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.icon(bitmapDesc);
-        for (ReekMarker marker : reekMarkers) {
-            LatLng point = new LatLng(marker.mLatitude, marker.mLongitude);
-            markerOptions.position(point).title(marker.mName);
-            mMap.addMarker(markerOptions);
-
-            Log.d("MapsActivity", "showReeks: " + marker.mName);
-        }
-    }
-
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -116,7 +100,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-//        setMoscowLocation();
 
         mMap.getUiSettings().setMapToolbarEnabled(false);
 
@@ -147,37 +130,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .icon(bitmapDesc)
                         .title("Здесь");
                 mCurrentMarker = mMap.addMarker(markerOptions);
-
-//                Geocoder geocoder = new Geocoder(MapsActivity.this, Locale.getDefault());
-//                try {
-//                    List<Address> addresses  = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
-//                    String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-//                    String city = addresses.get(0).getLocality();
-//                    String state = addresses.get(0).getAdminArea();
-//                    String country = addresses.get(0).getCountryName();
-//                    String postalCode = addresses.get(0).getPostalCode();
-//                    String knownName = addresses.get(0).getFeatureName();
-//
-//                    Log.i("MapsActivity", "onMapClick: address = " + address);
-//                    Log.i("MapsActivity", "onMapClick: city = " + city);
-//                    Log.i("MapsActivity", "onMapClick: state = " + state);
-//                    Log.i("MapsActivity", "onMapClick: country = " + country);
-//                    Log.i("MapsActivity", "onMapClick: postalCode = " + postalCode);
-//                    Log.i("MapsActivity", "onMapClick: knownName = " + knownName);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-
-//                Toast.makeText(MapsActivity.this, "On map click", Toast.LENGTH_SHORT).show();
             }
         });
 
-//        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-//            @Override
-//            public void onMapLongClick(LatLng latLng) {
-//                Toast.makeText(MapsActivity.this, "On map long click", Toast.LENGTH_SHORT).show();
-//            }
-//        });
     }
 
     @Override
@@ -195,7 +150,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mViewModel.cancelRequests();
+    }
+
+    private void showReeks(List<ReekMarker> reekMarkers, int drawResource) {
+        if (mMap == null) {
+            return;
+        }
+
+        BitmapDescriptor bitmapDesc = BitmapDescriptorFactory.fromResource(drawResource);
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.icon(bitmapDesc);
+        for (ReekMarker marker : reekMarkers) {
+            LatLng point = new LatLng(marker.mLatitude, marker.mLongitude);
+            markerOptions.position(point).title(marker.mName);
+            mMap.addMarker(markerOptions);
+
+            Log.d("MapsActivity", "showReeks: " + marker.mName);
+        }
     }
 
     private void captureMapScreen() {
@@ -204,7 +181,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             @Override
             public void onSnapshotReady(Bitmap snapshot) {
-                // TODO Auto-generated method stub
                 bitmap = snapshot;
                 try {
                     File externalCacheDir = MapsActivity.this.getExternalCacheDir();
@@ -265,21 +241,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 last = new LatLng(55.742793, 37.615401);
             }
 
-//            BitmapDescriptor bitmapDesc = BitmapDescriptorFactory.fromResource(R.drawable.icon_marker_blue);
-//            MarkerOptions markerOptions = new MarkerOptions();
-//            markerOptions.position(last)
-//                    .icon(bitmapDesc)
-//                    .title("Вы здесь");
-
-//            mMap.addMarker(markerOptions);
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(last, 18));
-
         }
     }
 
     private void setMoscowLocation() {
         LatLng last = new LatLng(55.742793, 37.615401);
-//        mMap.addMarker(new MarkerOptions().position(last).title("Marker"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(last));
     }
 
