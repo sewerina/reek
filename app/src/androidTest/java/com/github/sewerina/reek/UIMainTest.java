@@ -2,6 +2,7 @@ package com.github.sewerina.reek;
 
 import android.content.pm.ActivityInfo;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -130,6 +131,33 @@ public class UIMainTest {
         onView(withId(R.id.tv_appInfo))
                 .check(matches(instanceOf(TextView.class)))
                 .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testSelectLocationBtn() {
+        Intents.init();
+
+        onView(withId(R.id.btn_selectLocation))
+                .check(matches(instanceOf(Button.class)))
+                .check(matches(isDisplayed()))
+                .check(matches(isEnabled()))
+                .check(matches(isClickable()))
+                .perform(click());
+
+        intended(hasComponent(MapsActivity.class.getName()));
+
+        onView(withText(R.string.tv_addMarker))
+                .check(matches(instanceOf(TextView.class)))
+                .check(matches(isDisplayed()));
+
+        onView(withId(R.id.map))
+                .check(matches(isDisplayed()));
+
+        onView(withId(R.id.fab_save))
+                .check(matches(instanceOf(Button.class)))
+                .check(matches(isDisplayed()))
+                .check(matches(isEnabled()))
+                .check(matches(isClickable()));
     }
 
 }
