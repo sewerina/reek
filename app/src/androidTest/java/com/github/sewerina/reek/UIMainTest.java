@@ -1,19 +1,20 @@
 package com.github.sewerina.reek;
 
 import android.content.pm.ActivityInfo;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.test.espresso.intent.Intents;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 
-import org.hamcrest.CoreMatchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +30,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
@@ -137,6 +139,9 @@ public class UIMainTest {
     public void testSelectLocationBtn() {
         Intents.init();
 
+        onView(withId(R.id.iv_mapScreen)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+        onView(withId(R.id.ibtn_deleteScreen)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+
         onView(withId(R.id.btn_selectLocation))
                 .check(matches(instanceOf(Button.class)))
                 .check(matches(isDisplayed()))
@@ -150,14 +155,32 @@ public class UIMainTest {
                 .check(matches(instanceOf(TextView.class)))
                 .check(matches(isDisplayed()));
 
-        onView(withId(R.id.map))
-                .check(matches(isDisplayed()));
+        onView(withId(R.id.map)).check(matches(isDisplayed()));
 
         onView(withId(R.id.fab_save))
                 .check(matches(instanceOf(Button.class)))
                 .check(matches(isDisplayed()))
                 .check(matches(isEnabled()))
-                .check(matches(isClickable()));
+                .check(matches(isClickable()))
+                .perform(click());
+
+        onView(withId(R.id.iv_mapScreen))
+                .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+                .check(matches(instanceOf(ImageView.class)))
+                .check(matches(isDisplayed()));
+
+        onView(withId(R.id.ibtn_deleteScreen))
+                .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+                .check(matches(instanceOf(ImageButton.class)))
+                .check(matches(isDisplayed()))
+                .check(matches(isEnabled()))
+                .check(matches(isClickable()))
+                .perform(click());
+
+        onView(withId(R.id.iv_mapScreen)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+        onView(withId(R.id.ibtn_deleteScreen)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
     }
+
+
 
 }
