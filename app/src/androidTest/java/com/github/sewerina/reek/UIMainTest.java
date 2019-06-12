@@ -1,5 +1,6 @@
 package com.github.sewerina.reek;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -24,7 +25,9 @@ import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -34,6 +37,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibilit
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -181,6 +185,20 @@ public class UIMainTest {
         onView(withId(R.id.ibtn_deleteScreen)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
     }
 
+    @Test
+    public void testSendComplaintBtn() {
+        Intents.init();
 
+        onView(withText(R.string.eFab_sendComplaint))
+                .check(matches(instanceOf(Button.class)))
+                .check(matches(isDisplayed()))
+                .check(matches(isEnabled()))
+                .check(matches(isClickable()))
+                .perform(click());
+
+        intended(allOf(
+                hasAction(containsString("CHOOSER")),
+                hasExtra("android.intent.extra.TITLE", activityRule.getActivity().getString(R.string.email_client))));
+    }
 
 }
