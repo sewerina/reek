@@ -78,24 +78,10 @@ public class MainViewModel extends ViewModel {
     }
 
     private String currentDate() {
-        // Var1
-//        Time today = new Time(Time.getCurrentTimezone());
-//        today.setToNow();
-//
-//        StringBuilder strBuilder = new StringBuilder();
-//        strBuilder.append(today.monthDay).append('.')
-//                .append((today.month + 1)).append('.')
-//                .append(today.year)
-//                .append(" в ")
-//                .append(today.format("%k:%M"));
-//        return strBuilder.toString();
-
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            // Var2
             SimpleDateFormat sdf = new SimpleDateFormat("d MMM yyyy в HH:mm");
             return sdf.format(new Date());
         } else {
-            // Var3
             Calendar calendar = Calendar.getInstance();
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             int month = calendar.get(Calendar.MONTH) + 1;
@@ -109,10 +95,6 @@ public class MainViewModel extends ViewModel {
                     hour + " ч. " +
                     min + " мин.";
         }
-
-        // Var4
-//        java.text.DateFormat dateFormat = DateFormat.getDateFormat();
-//        dateFormat.format(new Date());
     }
 
     public void setSelectReekPosition(int position) {
