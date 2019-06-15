@@ -1,9 +1,9 @@
-package com.github.sewerina.reek;
+package com.github.sewerina.reek.model;
 
 public class ReekMarker {
-    final String mName;
-    final double mLatitude;
-    final double mLongitude;
+    public final String mName;
+    public final double mLatitude;
+    public final double mLongitude;
 
     public ReekMarker(String name, double latitude, double longitude) {
         mName = name;

@@ -15,6 +15,10 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 
+import com.github.sewerina.reek.ui.AppInfoActivity;
+import com.github.sewerina.reek.ui.MainActivity;
+import com.github.sewerina.reek.ui.MapActivity;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -150,7 +154,7 @@ public class UIMainTest {
                 .check(matches(isClickable()))
                 .perform(click());
 
-        intended(hasComponent(MapsActivity.class.getName()));
+        intended(hasComponent(MapActivity.class.getName()));
 
         onView(withText(R.string.tv_addMarker))
                 .check(matches(instanceOf(TextView.class)))

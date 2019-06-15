@@ -1,10 +1,8 @@
-package com.github.sewerina.reek;
+package com.github.sewerina.reek.service;
 
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -12,6 +10,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.github.sewerina.reek.BuildConfig;
+import com.github.sewerina.reek.model.ReekMarker;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,26 +20,16 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapViewModel extends ViewModel {
+public class MosDataService {
     private static final String REQUEST_TAG_INDUSTRIAL_COMPANIES = "IndustrialCompaniesRequest";
     private static final String REQUEST_TAG_LARGE_WASTE_BINS = "LargeWasteBinsRequest";
     private final RequestQueue mRequestQueue;
-    private final MutableLiveData<List<ReekMarker>> mIndustrialCompaniesMarkers = new MutableLiveData<>();
-    private final MutableLiveData<List<ReekMarker>> mLargeWasteBinsMarkers = new MutableLiveData<>();
 
-    public MapViewModel(RequestQueue requestQueue) {
+    public MosDataService(RequestQueue requestQueue) {
         mRequestQueue = requestQueue;
     }
 
-    public LiveData<List<ReekMarker>> getIndustrialCompaniesMarkers() {
-        return mIndustrialCompaniesMarkers;
-    }
-
-    public LiveData<List<ReekMarker>> getLargeWasteBinsMarkers() {
-        return mLargeWasteBinsMarkers;
-    }
-
-    public void loadIndustrialCompanies() {
+    public void loadIndustrialCompanies(final MutableLiveData<List<ReekMarker>> industrialCompaniesMarkers) {
         String url = "https://apidata.mos.ru/v1/datasets/2601/rows?api_key=" + BuildConfig.MosApiKey;
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
@@ -61,7 +51,7 @@ public class MapViewModel extends ViewModel {
                                 double longitude = coordinates.getDouble(0);
                                 reekObjects.add(new ReekMarker(fullName, latitude, longitude));
                             }
-                            mIndustrialCompaniesMarkers.postValue(reekObjects);
+                            industrialCompaniesMarkers.postValue(reekObjects);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -81,7 +71,7 @@ public class MapViewModel extends ViewModel {
 
     }
 
-    public void loadLargeWasteBins() {
+    public void loadLargeWasteBins(final MutableLiveData<List<ReekMarker>> largeWasteBinsMarkers) {
         String url = "https://apidata.mos.ru/v1/datasets/2470/rows?api_key=" + BuildConfig.MosApiKey;
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
@@ -103,7 +93,7 @@ public class MapViewModel extends ViewModel {
                                 double longitude = coordinates.getDouble(0);
                                 reekObjects.add(new ReekMarker(name, latitude, longitude));
                             }
-                            mLargeWasteBinsMarkers.postValue(reekObjects);
+                            largeWasteBinsMarkers.postValue(reekObjects);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -129,5 +119,4 @@ public class MapViewModel extends ViewModel {
             mRequestQueue.cancelAll(REQUEST_TAG_LARGE_WASTE_BINS);
         }
     }
-
 }

@@ -1,4 +1,4 @@
-package com.github.sewerina.reek;
+package com.github.sewerina.reek.ui;
 
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
@@ -7,6 +7,10 @@ import android.text.TextUtils;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import com.github.sewerina.reek.model.Recipient;
+import com.github.sewerina.reek.model.RecipientList;
+import com.github.sewerina.reek.model.ReekKindList;
 
 import java.util.ArrayList;
 import java.util.Calendar;

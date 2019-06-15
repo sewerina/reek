@@ -2,6 +2,8 @@ package com.github.sewerina.reek;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 
+import com.github.sewerina.reek.ui.MainViewModel;
+
 import org.junit.Rule;
 import org.junit.Test;
 

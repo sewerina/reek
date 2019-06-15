@@ -1,4 +1,4 @@
-package com.github.sewerina.reek;
+package com.github.sewerina.reek.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,6 +29,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.github.sewerina.reek.R;
+import com.github.sewerina.reek.ReekApp;
+import com.github.sewerina.reek.model.ReekKind;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
@@ -129,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         mSelectLocationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(v.getContext(), MapsActivity.class), MAP_REQUEST_CODE);
+                startActivityForResult(new Intent(v.getContext(), MapActivity.class), MAP_REQUEST_CODE);
             }
         });
 
@@ -146,10 +148,10 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == MAP_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            String filePath = data.getStringExtra(MapsActivity.EXTRA_FILE_PATH);
+            String filePath = data.getStringExtra(MapActivity.EXTRA_FILE_PATH);
             mViewModel.setMapScreenPath(filePath);
 
-            String currentAddress = data.getStringExtra(MapsActivity.EXTRA_CURRENT_ADDRESS);
+            String currentAddress = data.getStringExtra(MapActivity.EXTRA_CURRENT_ADDRESS);
             mViewModel.setCurrentAddress(currentAddress);
         }
     }

@@ -18,7 +18,7 @@
         map:uiTiltGestures="true"
         map:uiZoomControls="true"
         map:uiZoomGestures="true"
-        tools:context=".MapsActivity" />
+        tools:context=".ui.MapActivity" />
 
     <LinearLayout
         android:layout_width="wrap_content"

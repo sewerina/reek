@@ -1,4 +1,4 @@
-package com.github.sewerina.reek;
+package com.github.sewerina.reek.model;
 
 public class ReekKind {
 

@@ -1,4 +1,6 @@
-package com.github.sewerina.reek;
+package com.github.sewerina.reek.model;
+
+import com.github.sewerina.reek.R;
 
 import java.util.ArrayList;
 

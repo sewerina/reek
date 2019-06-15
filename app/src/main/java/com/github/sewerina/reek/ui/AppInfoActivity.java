@@ -1,10 +1,12 @@
-package com.github.sewerina.reek;
+package com.github.sewerina.reek.ui;
 
 import android.os.Bundle;
 import android.text.Html;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.github.sewerina.reek.R;
 
 public class AppInfoActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.github.sewerina.reek;
+package com.github.sewerina.reek.ui;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -21,6 +21,9 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.github.sewerina.reek.R;
+import com.github.sewerina.reek.ReekApp;
+import com.github.sewerina.reek.model.ReekMarker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -38,7 +41,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
     public static final String EXTRA_FILE_PATH = "filePath";
     public static final String EXTRA_CURRENT_ADDRESS = "currentAddress";
     private static final String[] LOCATION_PERMISSIONS = new String[]
@@ -114,8 +117,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
 
-        mViewModel.loadIndustrialCompanies();
-        mViewModel.loadLargeWasteBins();
+        mViewModel.load();
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -155,7 +157,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mViewModel.cancelRequests();
+        mViewModel.cancel();
     }
 
     private void showReeks(List<ReekMarker> reekMarkers, int drawResource) {
@@ -171,7 +173,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             markerOptions.position(point).title(marker.mName);
             mMap.addMarker(markerOptions);
 
-            Log.d("MapsActivity", "showReeks: " + marker.mName);
+            Log.d("MapActivity", "showReeks: " + marker.mName);
         }
     }
 
@@ -183,12 +185,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onSnapshotReady(Bitmap snapshot) {
                 bitmap = snapshot;
                 try {
-                    File externalCacheDir = MapsActivity.this.getExternalCacheDir();
+                    File externalCacheDir = MapActivity.this.getExternalCacheDir();
                     File tempFile = File.createTempFile("map" + System.currentTimeMillis(), ".png", externalCacheDir);
                     FileOutputStream out = new FileOutputStream(tempFile);
                     bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
 
-                    Log.d("MapsActivity", "onSnapshotReady: " + bitmap.toString());
+                    Log.d("MapActivity", "onSnapshotReady: " + bitmap.toString());
 
                     sendData(tempFile.getPath());
                 } catch (Exception e) {
@@ -201,7 +203,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private String currentAddress(LatLng currentLatLng) {
-        Geocoder geocoder = new Geocoder(MapsActivity.this, Locale.getDefault());
+        Geocoder geocoder = new Geocoder(MapActivity.this, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(currentLatLng.latitude, currentLatLng.longitude, 1);
             return addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()

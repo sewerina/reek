@@ -5,6 +5,9 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.volley.RequestQueue;
+import com.github.sewerina.reek.service.MosDataService;
+import com.github.sewerina.reek.ui.MainViewModel;
+import com.github.sewerina.reek.ui.MapViewModel;
 
 public class AppViewModelFactory implements ViewModelProvider.Factory {
 
@@ -21,7 +24,7 @@ public class AppViewModelFactory implements ViewModelProvider.Factory {
             return (T) new MainViewModel();
         }
         if (modelClass.equals(MapViewModel.class)) {
-            return (T) new MapViewModel(mRequestQueue);
+            return (T) new MapViewModel(new MosDataService(mRequestQueue));
         }
 
         throw new IllegalArgumentException();
