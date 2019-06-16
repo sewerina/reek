@@ -107,9 +107,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         mMap.getUiSettings().setMapToolbarEnabled(false);
 
         if (hasLocationPermission()) {
+            setCurrentLocation();
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
-            setCurrentLocation();
         } else {
             setMoscowLocation();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
