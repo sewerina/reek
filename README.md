@@ -12,3 +12,9 @@
 - [API Портала открытых данных](https://apidata.mos.ru) - добавьте ключ **"MosApiKey"** в файл **"local.properties"**
 - [Google Maps SDK](https://console.cloud.google.com/apis) - добавьте ключ в ресурс **"values/google_maps_api.xml"**
 - [Firebase Crashlytics](https://console.firebase.google.com/) - приложите файл **"app/google-services.json"**
+
+# Используемые технологии
+- ViewModel & LiveData
+- Volley
+- Google Maps
+- Espresso
